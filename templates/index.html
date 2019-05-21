@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    首页
+{% endblock %}
+{% block header %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-md-6 column">
+                        <p style="font-size: 50px;font-family: 楷体,serif;">社区儿童成长跟踪系统</p>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <ul class="nav nav-tabs" style="margin-top: 16px;">
+                                {% if request.session.username %}
+                                    <li><a href="{% url 'personal' %}"></a></li>
+                                    <li class="dropdown">
+                                        <a class="dropdown-toggle" data-toggle="dropdown">
+                                            {{ request.session.username }}<span class="caret"></span>
+                                        </a>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="{% url 'personal' %}">个人中心</a></li>
+                                            <li><a href="{% url 'token_password' %}">修改密码</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a href="{% url 'quit' %}">退出</a></li>
+                                {% else %}
+                                    <li><a href="{% url 'login' %}">登录</a></li>
+                                    <li><a href="{% url 'register' %}">注册</a></li>
+                                {% endif %}
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-12 column">
+                <img src="{% static 'images/index.jpg' %}" style="margin-left: 10px;width: 1100px;height: 320px; border-radius: 60px;">
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="col-md-1 column"></div>
+                <div class="col-md-10 column" style="margin-top: 30px;">
+
+                    <ul class="nav nav-tabs">
+                        <li class="active"><a href="{% url 'index' %}">首页</a></li>
+                        {% if request.session.username %}
+                            <li><a href="{% url 'community' %}">社区活动</a></li>
+                            <li><a href="{% url 'activiteroom' %}">社区活动室</a></li>
+                            <li><a href="{% url 'introduction' %}">系统介绍</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+                <div class="col-md-1 column"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block centent %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-md-1 column"></div>
+                    <div class="col-md-5 column">
+                        <ul class="list-group" style="margin-top: 20px">
+                            {% for foo in activity %}
+                                <li class="list-group-item"><span>{{ foo.title }}</span><span style="float: right;">{{ foo.datetime }}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    <div class="col-md-5 column" style="margin-top: 30px;">
+                        <div class="carousel slide" id="carousel-882339">
+                            <ol class="carousel-indicators">
+                                <li data-slide-to="0" data-target="#carousel-882339">
+                                </li>
+                                <li data-slide-to="1" data-target="#carousel-882339" class="active">
+                                </li>
+                                <li data-slide-to="2" data-target="#carousel-882339">
+                                </li>
+                            </ol>
+                            <div class="carousel-inner">
+                                <div class="item">
+                                    <img alt="" src="{% static 'images/item_1.jpg' %}" style="width: 500px;height: 280px;"/>
+                                    <div class="carousel-caption">
+                                    </div>
+                                </div>
+                                <div class="item active">
+                                    <img alt="" src="{% static 'images/item_2.jpg' %}" style="width: 500px;height: 280px;"/>
+                                    <div class="carousel-caption">
+
+                                    </div>
+                                </div>
+                                <div class="item">
+                                    <img alt="" src="{% static 'images/item_3.jpg' %}" style="width: 500px;height: 280px;"/>
+                                    <div class="carousel-caption">
+                                    </div>
+                                </div>
+                            </div>
+                            <a class="left carousel-control" href="#carousel-882339" data-slide="prev"><span
+                                    class="glyphicon glyphicon-chevron-left"></span></a> <a class="right carousel-control" href="#carousel-882339"
+                                                                                            data-slide="next"><span
+                                class="glyphicon glyphicon-chevron-right"></span></a>
+                        </div>
+                    </div>
+                    <div class="col-md-1 column"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block footer %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-md-4 column">
+                    </div>
+                    <div class="col-md-4 column">
+                        <p style="text-align: center; margin-top: 50px;">&copy;社区儿童成长跟踪系统</p>
+                    </div>
+                    <div class="col-md-4 column">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

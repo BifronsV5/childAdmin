@@ -1,0 +1,60 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    社区活动
+{% endblock %}
+{% block centent %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <ul class="list-group" style="margin-top: 20px;">
+                        {% for foo in pagi %}
+                            <li class="list-group-item"><a href="?communityid={{ foo.id }}">{{ foo.title }}</a><span
+                                    style="float: right">{{ foo.datetime }}</span></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+            <div class="col-md-12" style="margin-left: 350px;">
+                <ul class="pagination pagination-lg">
+                    {% if  pagi.previous_page_number > 0 %}
+                        <li>
+                            <a href="?page={{ pagi.previous_page_number }}" aria-label="Previous">
+                                &laquo;
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% for page_num in page_list %}
+                        {% if page_num == pagi.number %}
+                            <li class="active"><a href="?page={{ page_num }}&=news_type{{ news_type }}">{{ page_num }}</a></li>
+                        {% else %}
+                            <li><a href="?page={{ page_num }}&news_type={{ news_type }}">{{ page_num }}</a></li>
+                        {% endif %}
+                    {% endfor %}
+                    {% if pagi.has_next %}
+                        <li>
+                            <a href="?page={{ pagi.next_page_number }}&news_type={{ news_type }}" aria-label="Next">
+                                &raquo;
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+

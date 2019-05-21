@@ -1,0 +1,551 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    个人中心
+{% endblock %}
+{% block header %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-md-6 column">
+                        <p style="font-size: 50px;font-family: 楷体,serif;">社区儿童成长跟踪系统</p>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div class="col-md-6"></div>
+                        <div class="col-md-6">
+                            <ul class="nav nav-tabs" style="margin-top: 16px;">
+                                <li class="active"><a href="{% url 'index' %}">首页</a></li>
+                                <li class="dropdown">
+                                    <a class="dropdown-toggle" data-toggle="dropdown">
+                                        {{ request.session.username }}<span class="caret"></span>
+                                    </a>
+                                    <ul class="dropdown-menu">
+                                        <li><a href="{% url 'personal' %}">个人中心</a></li>
+                                        <li><a href="{% url 'token_password' %}">修改密码</a></li>
+                                    </ul>
+                                </li>
+                                <li><a href="{% url 'quit' %}">退出</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-md-6 column">
+                        <div class="row clearfix">
+                            <table class="table table-hover">
+                                <thead>
+                                <tr>
+                                    <th>用户名</th>
+                                    <th>邮箱</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr>
+                                    <td>{{ user.username }}</td>
+                                    <td>{{ user.email }}</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                            <div class="col-md-12">
+                                <h3>孩子信息:</h3>
+                                {% if baby == None %}
+                                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+                                        添加信息
+                                    </button>
+                                    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                        &times;
+                                                    </button>
+                                                    <h4 class="modal-title" id="myModalLabel">
+                                                        添加孩子信息
+                                                    </h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group" style="margin-top: 4px">
+                                                        <label for="image">上传孩子的照片:</label>
+                                                        <input type="file" name="image" id="image">
+                                                    </div>
+                                                    <div class="form-group" style="margin-top: 4px">
+                                                        <label for="name">姓名:</label><input type="text"
+                                                                                            class="form-control"
+                                                                                            id="name" name="name"
+                                                                                            placeholder="请输入姓名.."/>
+                                                    </div>
+                                                    <div class="form-group" style="margin-top: 4px">
+                                                        <label for="sexuality">性别:</label>
+                                                        <select class="form-control" name="sexuality" id="sexuality">
+                                                            <option>男</option>
+                                                            <option>女</option>
+                                                        </select>
+                                                    </div>
+                                                    <div class="form-group" style="margin-top: 4px">
+                                                        <label for="birthday">生日:</label><input type="date"
+                                                                                                class="form-control"
+                                                                                                id="birthday" name="birthday"
+                                                                                                placeholder="请输入生日.."/>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                    </button>
+                                                    <button type="button" class="btn btn-primary" id="submit">
+                                                        提交更改
+                                                    </button>
+                                                    <script>
+                                                        $("#submit").click(function () {
+                                                            var form_data = new FormData();
+                                                            var image = $("#image")[0].files[0];
+                                                            var name = $('#name').val();
+                                                            var sexuality = $('#sexuality').val();
+                                                            var birthday = $('#birthday').val();
+                                                            form_data.append('image', image);
+                                                            form_data.append('name', name);
+                                                            form_data.append('sexuality', sexuality);
+                                                            form_data.append('birthday', birthday);
+                                                            $.ajax({
+                                                                url: '{% url 'addchild' %}',
+                                                                data: form_data,
+                                                                type: 'POST',
+                                                                processData: false,
+                                                                contentType: false,
+                                                                success: function (data) {
+                                                                    if (data === '成功') {
+                                                                        location.reload()
+                                                                    }
+                                                                    alert(data)
+                                                                },
+                                                                error: function (err) {
+                                                                    console.log('错误信息' + err);
+                                                                }
+                                                            });
+                                                        });
+                                                    </script>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <div class="col-md-4">
+                                        <img src="/media/{{ baby.image }}" style="width: 140px; height: 200px;">
+                                    </div>
+                                    <div class="col-md-5"><br>
+                                        <p id="babyid" data-value="{{ baby.id }}">姓名: {{ baby.name }}</p><br><br>
+                                        <p>性别: {{ baby.get_gender }}</p><br><br>
+                                        <p>出生日期: {{ baby.birthday }}</p>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#modifyChild" style="margin-top: 140px">
+                                            修改
+                                        </button>
+                                        <div class="modal fade" id="modifyChild" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                             aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                            &times;
+                                                        </button>
+                                                        <h4 class="modal-title" id="myModalLabel">
+                                                            修改孩子信息
+                                                        </h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="image">上传孩子的照片:</label>
+                                                            <input type="file" name="image_" id="image_">
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="name">姓名:</label><input type="text"
+                                                                                                class="form-control"
+                                                                                                id="name_" name="name_"
+                                                                                                placeholder="请输入姓名.."/>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="sexuality">性别:</label>
+                                                            <select class="form-control" name="sexuality_" id="sexuality_">
+                                                                <option>男</option>
+                                                                <option>女</option>
+                                                            </select>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="birthday">生日:</label><input type="date"
+                                                                                                    class="form-control"
+                                                                                                    id="birthday_" name="birthday_"
+                                                                                                    placeholder="请输入生日.."/>
+                                                        </div>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                        </button>
+                                                        <button type="button" class="btn btn-primary" id="modify">
+                                                            提交更改
+                                                        </button>
+                                                        <script>
+                                                            $("#modify").click(function () {
+                                                                var form_data = new FormData();
+                                                                var childid = $("#babyid").attr('data-value');
+                                                                var image = $("#image_")[0].files[0];
+                                                                var name = $('#name_').val();
+                                                                var sexuality = $('#sexuality_').val();
+                                                                var birthday = $('#birthday_').val();
+                                                                form_data.append('image', image);
+                                                                form_data.append('childid', childid);
+                                                                form_data.append('name', name);
+                                                                form_data.append('sexuality', sexuality);
+                                                                form_data.append('birthday', birthday);
+                                                                $.ajax({
+                                                                    url: '{% url 'modifychild' %}',
+                                                                    data: form_data,
+                                                                    type: 'POST',
+                                                                    processData: false,
+                                                                    contentType: false,
+                                                                    success: function (data) {
+                                                                        if (data === '修改成功') {
+                                                                            location.reload()
+                                                                        }
+                                                                        alert(data)
+                                                                    },
+                                                                    error: function (err) {
+                                                                        console.log('错误信息' + err);
+                                                                    }
+                                                                });
+                                                            });
+                                                        </script>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                            <div class="col-md-12">
+                                <h3>抚养人信息:</h3>
+                                {% for foo in dependent %}
+                                    <div style="border-style:double none none none;padding-top: 20px; height: 160px">
+                                        <div style="margin-left: 30px;">
+                                            <div class="col-md-6">
+                                                <p>抚养人姓名: {{ foo.name }}</p>
+                                                <p>抚养人职业: {{ foo.career }}</p>
+                                                <p>抚养人手机号: {{ foo.phone }}</p>
+                                                <p>与孩子的关系: {{ foo.relation }}</p>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <button class="btn btn-primary btn-lg" style="margin-top: 60px;" data-toggle="modal"
+                                                        data-target="#modify_dependent{{ foo.id }}">修改
+                                                </button>
+                                                <div class="modal fade" id="modify_dependent{{ foo.id }}" tabindex="-1" role="dialog"
+                                                     aria-labelledby="myModalLabel"
+                                                     aria-hidden="true">
+                                                    <div class="modal-dialog">
+                                                        <div class="modal-content">
+                                                            <div class="modal-header">
+                                                                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                                                    &times;
+                                                                </button>
+                                                                <h4 class="modal-title" id="myModalLabel">
+                                                                    修改抚养人信息
+                                                                </h4>
+                                                            </div>
+                                                            <div class="modal-body">
+                                                                <div class="form-group" style="margin-top: 4px">
+                                                                    <label for="dep_name">抚养人姓名:</label><input type="text"
+                                                                                                               class="form-control"
+                                                                                                               id="dep_name{{ foo.id }}" name="dep_name"
+                                                                                                               placeholder="请输入扶养人姓名.." value="{{ foo.name }}"/>
+                                                                </div>
+                                                                <div class="form-group" style="margin-top: 4px">
+                                                                    <label for="dep_career">抚养人职业:</label><input type="text"
+                                                                                                                 class="form-control"
+                                                                                                                 id="dep_career{{ foo.id }}" name="dep_career"
+                                                                                                                 placeholder="请输入扶养人职业.."
+                                                                                                                 value="{{ foo.career }}"/>
+                                                                </div>
+                                                                <div class="form-group" style="margin-top: 4px">
+                                                                    <label for="dep_phone">抚养人手机号:</label><input type="text"
+                                                                                                                 class="form-control"
+                                                                                                                 id="dep_phone{{ foo.id }}" name="dep_phone"
+                                                                                                                 placeholder="请输入扶养人手机号.."
+                                                                                                                 value="{{ foo.phone }}"/>
+                                                                </div>
+                                                                <div class="form-group" style="margin-top: 4px">
+                                                                    <label for="dep_relation">抚养人关系:</label><input type="text"
+                                                                                                                   class="form-control"
+                                                                                                                   id="dep_relation{{ foo.id }}"
+                                                                                                                   name="dep_relation"
+                                                                                                                   placeholder="请输入扶养人关系.."
+                                                                                                                   value="{{ foo.relation }}"/>
+                                                                </div>
+                                                            </div>
+                                                            <div class="modal-footer">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                                                                </button>
+                                                                <button type="button" class="btn btn-primary" id="modify_dep{{ foo.id }}">
+                                                                    提交更改
+                                                                </button>
+                                                            </div>
+                                                        </div><!-- /.modal-content -->
+                                                    </div><!-- /.modal -->
+                                                </div>
+                                            </div>
+                                            <script>
+                                                $('#modify_dep{{ foo.id }}').click(function () {
+                                                    var name = $('#dep_name{{ foo.id }}').val();
+                                                    var career = $('#dep_career{{ foo.id }}').val();
+                                                    var phone = $('#dep_phone{{ foo.id }}').val();
+                                                    var relation = $('#dep_relation{{ foo.id }}').val();
+                                                    $.ajax({
+                                                        url: '{% url 'modify_dependent' %}',
+                                                        data: {
+                                                            'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                                            'id': '{{ foo.id }}',
+                                                            'name': name,
+                                                            'career': career,
+                                                            'phone': phone,
+                                                            'relation': relation
+                                                        },
+                                                        datatype: 'json',
+                                                        type: 'post',
+                                                        async: 'true',
+                                                        success: function (data) {
+                                                            if (data === '修改成功') {
+                                                                location.reload()
+                                                            }
+                                                            alert(data)
+                                                        },
+                                                        error: function (err) {
+                                                            console.log('错误信息' + err);
+                                                        }
+                                                    });
+                                                })
+                                            </script>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                                {% if dependent_len <= 1 %}
+                                    <button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#addDependent"
+                                            style="margin-top: 30px;margin-left: 30px;">添加抚养人
+                                    </button>
+                                    <div class="modal fade" id="addDependent" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title" id="myModalLabel">添加抚养人</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="modal-body">
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="dep_name">抚养人姓名:</label><input type="text"
+                                                                                                       class="form-control"
+                                                                                                       id="dep_name" name="dep_name"
+                                                                                                       placeholder="请输入扶养人姓名.."/>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="dep_career">抚养人职业:</label><input type="text"
+                                                                                                         class="form-control"
+                                                                                                         id="dep_career" name="dep_career"
+                                                                                                         placeholder="请输入扶养人职业.."/>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="dep_phone">扶养人手机号:</label><input type="text"
+                                                                                                         class="form-control"
+                                                                                                         id="dep_phone" name="dep_phone"
+                                                                                                         placeholder="请输入扶养人手机号.."/>
+                                                        </div>
+                                                        <div class="form-group" style="margin-top: 4px">
+                                                            <label for="dep_relation">扶养人关系:</label><input type="text"
+                                                                                                           class="form-control"
+                                                                                                           id="dep_relation" name="dep_relation"
+                                                                                                           placeholder="请输入扶养人关系.."/>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                                    <button type="button" class="btn btn-primary" id="add_dep">提交更改</button>
+                                                </div>
+                                                <script>
+                                                    $('#add_dep').click(function () {
+                                                        var name = $('#dep_name').val();
+                                                        var career = $('#dep_career').val();
+                                                        var phone = $('#dep_phone').val();
+                                                        var relation = $('#dep_relation').val();
+                                                        $.ajax({
+                                                            url: '{% url 'add_dependent' %}',
+                                                            data: {
+                                                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                                                'name': name,
+                                                                'career': career,
+                                                                'phone': phone,
+                                                                'relation': relation
+                                                            },
+                                                            datatype: 'json',
+                                                            type: 'post',
+                                                            async: 'true',
+                                                            success: function (data) {
+                                                                if (data === '成功') {
+                                                                    location.reload()
+                                                                }
+                                                                alert(data)
+                                                            },
+                                                            error: function (err) {
+                                                                console.log('错误信息' + err);
+                                                            }
+                                                        });
+                                                    })
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 column">
+                        <div style="height: 250px;">
+                            <h3>参加的活动</h3>
+                            <ul class="list-group" style="margin-top: 20px;">
+                                {% for foo in pagi %}
+                                    <li class="list-group-item"><span>{{ foo.activity }}</span>{% if foo.centent == None %}
+                                        <a data-toggle="modal" data-target="#myModal{{ foo.id }}"
+                                           style="float: right;margin-left: 5px"
+                                        >反馈</a>
+                                    {% else %}
+                                        <span style="float: right;margin-left: 5px">已反馈</span>
+                                    {% endif %}<span
+                                            style="float: right">{{ foo.activity.datetime }}</span>
+                                    </li>
+                                    <div class="modal fade" id="myModal{{ foo.id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                                         aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <h4 class="modal-title" id="myModalLabel">反馈信息</h4>
+                                                </div>
+                                                <div class="modal-body">
+                                                    <div class="form-group">
+                                                        <label for="name">文本框</label>
+                                                        <textarea class="form-control" rows="3" style="resize: none" name="feedback"
+                                                                  id="feedback{{ foo.id }}"></textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+                                                    <button type="button" class="btn btn-primary" id="feed{{ foo.id }}">提交更改</button>
+                                                </div>
+                                                <script>
+                                                    $('#feed{{ foo.id }}').click(function () {
+                                                        var feedback = $('#feedback{{ foo.id }}').val();
+                                                        $.ajax({
+                                                            url: '{% url 'feedback' %}',
+                                                            data: {
+                                                                'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                                                'feedback': feedback,
+                                                                'id': '{{ foo.id }}'
+                                                            },
+                                                            datatype: 'json',
+                                                            type: 'post',
+                                                            async: 'true',
+                                                            success: function (data) {
+                                                                if (data === '反馈成功') {
+                                                                    location.reload()
+                                                                }
+                                                                alert(data)
+                                                            },
+                                                            error: function (err) {
+                                                                console.log('错误信息' + err);
+                                                            }
+                                                        });
+                                                    })
+                                                </script>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-md-12">
+                            <ul class="pagination pagination-lg">
+                                {% if  pagi.previous_page_number > 0 %}
+                                    <li>
+                                        <a href="?page={{ pagi.previous_page_number }}" aria-label="Previous">
+                                            &laquo;
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% for page_num in page_list %}
+                                    {% if page_num == pagi.number %}
+                                        <li class="active"><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% else %}
+                                        <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if pagi.has_next %}
+                                    <li>
+                                        <a href="?page={{ pagi.next_page_number }}" aria-label="Next">
+                                            &raquo;
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                        <div style="height:350px;">
+                            <h3>给孩子的建议</h3>
+                            <ul class="list-group" style="margin-top: 20px;">
+                                {% for foo in pagi_ %}
+                                    <li class="list-group-item">{{ foo.content }}<span style="float: right">{{ foo.date }}</span></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="col-md-12">
+                            <ul class="pagination pagination-lg">
+                                {% if  pagi_.previous_page_number > 0 %}
+                                    <li>
+                                        <a href="?page={{ pagi_.previous_page_number }}" aria-label="Previous">
+                                            &laquo;
+                                        </a>
+                                    </li>
+                                {% endif %}
+                                {% for page_num in page_list_ %}
+                                    {% if page_num == pagi_.number %}
+                                        <li class="active"><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% else %}
+                                        <li><a href="?page={{ page_num }}">{{ page_num }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+                                {% if pagi_.has_next %}
+                                    <li>
+                                        <a href="?page={{ pagi_.next_page_number }}" aria-label="Next">
+                                            &raquo;
+                                        </a>
+                                    </li>
+                                {% endif %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

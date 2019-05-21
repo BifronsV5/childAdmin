@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    忘记密码
+{% endblock %}
+{% block header %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="row clearfix">
+                    <div class="col-md-6 column">
+                        <p style="font-size: 50px;font-family: 楷体,serif;">社区儿童成长跟踪系统</p>
+                    </div>
+                    <div class="col-md-6 column">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+        <div class="col-md-4">
+            <div style="margin-top: 100px">
+                <form role="form" method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="exampleInputPassword1">邮箱:</label><input type="password"
+                                                                             class="form-control"
+                                                                             id="email" name="email"
+                                                                             placeholder="请输入新密码.."/>
+                    </div>
+                    <button type="submit" class="btn btn-default">发送</button>{{ message }}
+                </form>
+            </div>
+        </div>
+        <div class="col-md-4"></div>
+{% endblock %}

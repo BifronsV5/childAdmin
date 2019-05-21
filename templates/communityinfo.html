@@ -1,0 +1,65 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    社区活动详情
+{% endblock %}
+{% block centent %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="col-md-8">
+                        <h3>{{ activity.title }}</h3>
+                        {% if activityjion == 0 %}
+                            <button style="float: right" class="btn btn-default" id="submit">参加</button>
+                            {% else %}
+                            <button style="float: right" class="btn btn-default disabled" id="submit">已参加</button>
+                        {% endif %}
+                        <script>
+                            $('#submit').click(function () {
+                                $.ajax({
+                                    url: '{% url 'join_activite' %}',
+                                    data: {
+                                        'csrfmiddlewaretoken': '{{ csrf_token }}',
+                                        'id': '{{ activity.id }}'
+                                    },
+                                    datatype: 'json',
+                                    type: 'post',
+                                    async: 'true',
+                                    success: function (data) {
+                                        if (data === '参加成功') {
+                                            location.reload()
+                                        }
+                                        alert(data)
+                                    },
+                                    error: function (err) {
+                                        console.log('错误信息' + err);
+                                    }
+                                });
+                            })
+                        </script>
+                        <p>活动时间: {{ activity.datetime }}</p>
+                        <p>活动地点:{{ activity.location }}</p>
+                        <p>活动负责人:{{ activity.principal }}</p>
+                        <p>活动介绍:{{ activity.introduction }}</p>
+                    </div>
+                    <div class="col-md-4">
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

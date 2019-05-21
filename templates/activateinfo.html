@@ -1,0 +1,37 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    {{ activiteroom_ }}
+{% endblock %}
+{% block centent %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <div class="col-md-4">
+                        <h3>{{ activiteroom_.title }}</h3>
+                        <img src="/media/{{ activiteroom_.image }}">
+                    </div>
+                    <div class="col-md-6" style="margin-left: 20px;">
+                        <h5 style="margin-top: 42px;">活动室介绍:</h5>
+                        <p>{{ activiteroom_.description }}</p>
+                        <p>负责人: {{ activiteroom_.principal }}</p>
+                        <p>电话: {{ activiteroom_.phone }}</p>
+                    </div>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

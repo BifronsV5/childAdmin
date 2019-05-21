@@ -1,0 +1,32 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block add %}
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    <script src="https://cdn.bootcss.com/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <style>
+        body {
+            background: whitesmoke;
+        }
+    </style>
+{% endblock %}
+{% block head %}
+    社区活动室
+{% endblock %}
+{% block centent %}
+    <div class="container">
+        <div class="row clearfix">
+            <div class="col-md-12 column">
+                <div class="col-md-1"></div>
+                <div class="col-md-10">
+                    <ul class="list-group" style="margin-top: 20px;">
+                        {% for foo in activiteroom_ %}
+                            <li class="list-group-item"><a href="?activiteid={{ foo.id }}">{{ foo.title }}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="col-md-1"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
